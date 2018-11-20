@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hlsyn", "hlsyn\hlsyn.vcxproj", "{7BDA5CCB-F72C-491E-9509-158D75C21EEA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BDA5CCB-F72C-491E-9509-158D75C21EEA}.Debug|x64.ActiveCfg = Debug|x64
+		{7BDA5CCB-F72C-491E-9509-158D75C21EEA}.Debug|x64.Build.0 = Debug|x64
+		{7BDA5CCB-F72C-491E-9509-158D75C21EEA}.Debug|x86.ActiveCfg = Debug|Win32
+		{7BDA5CCB-F72C-491E-9509-158D75C21EEA}.Debug|x86.Build.0 = Debug|Win32
+		{7BDA5CCB-F72C-491E-9509-158D75C21EEA}.Release|x64.ActiveCfg = Release|x64
+		{7BDA5CCB-F72C-491E-9509-158D75C21EEA}.Release|x64.Build.0 = Release|x64
+		{7BDA5CCB-F72C-491E-9509-158D75C21EEA}.Release|x86.ActiveCfg = Release|Win32
+		{7BDA5CCB-F72C-491E-9509-158D75C21EEA}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D055C890-C8DD-4DD6-A2A1-92BAFE6BA4F8}
+	EndGlobalSection
+EndGlobal
