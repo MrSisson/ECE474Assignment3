@@ -20,13 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ReadInputFile.cpp" />
     <ClCompile Include="Variables.cpp" />
+    <ClCompile Include="WriteOutputFile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ReadInputFile.h" />
     <ClInclude Include="Variables.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="error tests\error1.txt" />
+    <ClInclude Include="WriteOutputFile.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
