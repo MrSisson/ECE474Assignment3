@@ -2,6 +2,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 using namespace std;
@@ -39,33 +40,4 @@ int Variables::getWidth() {
 
 bool Variables::getIsSigned() {
 	return this->isSigned;
-}
-
-// methods
-void Variables::fetchVariables(ifstream &inputFile, vector<Variables> inputList, vector<Variables> outputList, vector<Variables> registerList) {
-	string word;
-	string token;
-
-	while (inputFile >> word) {
-		//cout << word << endl;
-		if (word.compare("input") == 0) {	// find inputs
-			getline(inputFile, token);
-			this->checkSign(token);
-		}
-		else if (word.compare("output") == 0) {	//	find outputs
-
-		}
-		else if (word.compare("variable") == 0) {	// find registers
-
-		}
-	}
-}
-
-void Variables::checkSign(string token) {
-	if (token.find("UInt") != string::npos) {
-		this->isSigned = false;
-	}
-	else if (token.find("Int") != string::npos) {
-		this->isSigned = true;
-	}
 }

@@ -29,8 +29,6 @@ public:
 	int getWidth();
 	bool getIsSigned();
 
-	//methods
-	void fetchVariables(ifstream &inputFile, vector<Variables> inputList, vector<Variables> outputList, vector<Variables> registerList);
-	void checkSign(string token);
+	
 };
 #endif	// !VARIABLES_H

@@ -1,7 +1,9 @@
 //#include "Edges.h"
 //#include "Nodes.h"
 //#include "Graph.h"
+
 #include "Variables.h"
+#include "ReadInputFile.h"
 
 #include <fstream>
 #include <iostream>
@@ -22,21 +24,50 @@ int main(int argc, char* argv[]) {
 
 	ifstream inputFilename;
 	ofstream outputFilename;
-	vector<Variables> inputList;
-	vector<Variables> outputList;
-	vector<Variables> registerList;
 
 	// Class objects
 	Variables var;
+	ReadInputFile read;
+
 
 	inputFilename.open(argv[1]);
+	/*cout << "argv0:\t" << argv[0] << endl;
+	cout << "argv1:\t" << argv[1] << endl;
+	cout << "argv2:\t" << argv[2] << endl;
+	cout << "argv3:\t" << argv[3] << endl;*/
+
+	// Get data from input file
 	if (inputFilename.is_open()) {
-		var.fetchVariables(inputFilename, inputList, outputList, registerList);
+
+		// fetching variables from input file
+		read.fetchVariables(inputFilename, var);
+
+		// Do stuffs....
+
+		// close input file
+		inputFilename.close();
 	}
-	else {
-		cout << "Error: File doesn't exists." << endl;
+	else {	// Error!!
+		cout << "Error: Input file doesn't exists." << endl;
 		return -1;
 	}
+
+
+	// Generate output file
+	outputFilename.open(argv[3]);
+	if (outputFilename.is_open()) {
+
+		// writing to output file
+		outputFilename << "testing....\n";
+
+		// close output file
+		outputFilename.close();
+	}
+	else {	// Error!!
+		cout << "Error: Output file doesn't exists." << endl;
+		return -1;
+	}
+	
 
 	return 0;
 }// end of main function
