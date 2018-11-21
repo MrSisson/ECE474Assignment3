@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 
@@ -28,7 +29,6 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 	string line;	// store single input string
 	string token;	// string temp or word temp
 	string token2;
-	char temp;
 	char lastChar;	// use for checking last character of a line or word
 
 	while (!file.eof()) {
@@ -36,7 +36,7 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 		istringstream streamLine(line);
 		// cout << line << endl;	// Remove this; debugging only
 
-		if (this->checkFirstLine(line) == true) {	// check error in first line
+		if (this->checkOperationLine(line) == true) {	// checks if line is an operation
 			break;
 		}
 		else {
@@ -102,6 +102,7 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 			}
 		}
 	}
+	this->checkDuplicatedVariables();
 }
 
 // Valid data types include:
@@ -169,12 +170,76 @@ void ReadInputFile::setWidthAndSign(Variables &var, string token) {
 	}
 }
 
-bool ReadInputFile::checkFirstLine(string line) {
+bool ReadInputFile::checkOperationLine(string line) {
 	bool flag = false;
 	size_t found = line.find_first_of("=+-*/><:?%");
 	if (found != string::npos) {
 		flag = true;	// flag high: found error!!
-		cout << "Error: Input, output, variable declarations should come before component instantiations." << endl;
 	}
 	return flag;
+}
+
+void ReadInputFile::checkDuplicatedVariables(){
+	int exit = -1;
+	unsigned int size;
+	unsigned int size2;
+	vector<Variables> tempList; // temporary list for comparison
+	string currName;	// current variable name assigned
+	string compName;	// compare current variable name to this
+
+	while (exit == -1) {
+		// checking for duplicated variales in inputList
+		tempList = inputList;
+		size = inputList.size();
+		for (int i = 0; i < size; i++) {
+			currName = inputList.at(i).getName();
+			tempList.erase(tempList.begin());
+			size2 = tempList.size();
+			for (int j = 0; j < size2; j++) {
+				compName = tempList.at(j).getName();
+				if (compName.compare(currName) == 0) {
+					inputList.erase(inputList.begin() + i); // found duplicate, remove from list
+					i = size;
+					exit = 1;
+					break;
+				}
+			}
+		}
+
+		// checking for duplicated variales in outputList
+		tempList = outputList;
+		size = outputList.size();
+		for (int i = 0; i < size; i++) {
+			currName = outputList.at(i).getName();
+			tempList.erase(tempList.begin());
+			size2 = tempList.size();
+			for (int j = 0; j < size2; j++) {
+				compName = tempList.at(j).getName();
+				if (compName.compare(currName) == 0) {
+					outputList.erase(outputList.begin() + i); // found duplicate, remove from list
+					i = size;
+					exit = 1;
+					break;
+				}
+			}
+		}
+
+		// checking for duplicated variales in registerList
+		tempList = registerList;
+		size = registerList.size();
+		for (int i = 0; i < size; i++) {
+			currName = registerList.at(i).getName();
+			tempList.erase(tempList.begin());
+			size2 = tempList.size();
+			for (int j = 0; j < size2; j++) {
+				compName = tempList.at(j).getName();
+				if (compName.compare(currName) == 0) {
+					registerList.erase(registerList.begin() + i); // found duplicate, remove from list
+					i = size;
+					exit = 1;
+					break;
+				}
+			}
+		}
+	}
 }

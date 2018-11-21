@@ -1,3 +1,11 @@
-﻿  ReadInputFile.cpp
-c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\readinputfile.cpp(31): warning C4101: 'temp': unreferenced local variable
-  hlsyn.vcxproj -> C:\Users\wysvi\Documents\GitHub\ECE474Assignment3\hlsyn\Debug\hlsyn.exe
+﻿  WriteOutputFile.cpp
+c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\writeoutputfile.h(17): error C2039: 'ofstream': is not a member of 'std'
+  c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\predefined c++ types (compiler internal)(256): note: see declaration of 'std'
+c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\writeoutputfile.h(17): error C2061: syntax error: identifier 'ofstream'
+c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\writeoutputfile.h(18): error C2039: 'ofstream': is not a member of 'std'
+  c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\predefined c++ types (compiler internal)(256): note: see declaration of 'std'
+c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\writeoutputfile.h(18): error C2061: syntax error: identifier 'ofstream'
+c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\writeoutputfile.cpp(16): error C2511: 'void WriteOutputFile::createHLSMHeader(std::ofstream &)': overloaded member function not found in 'WriteOutputFile'
+  c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\writeoutputfile.h(5): note: see declaration of 'WriteOutputFile'
+c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\writeoutputfile.cpp(20): error C2511: 'void WriteOutputFile::createDeclarations(std::ofstream &,ReadInputFile &)': overloaded member function not found in 'WriteOutputFile'
+  c:\users\wysvi\documents\github\ece474assignment3\hlsyn\hlsyn\writeoutputfile.h(5): note: see declaration of 'WriteOutputFile'

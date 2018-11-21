@@ -17,7 +17,8 @@ public:
 	//methods
 	void fetchVariables(ifstream &file, Variables &var);
 	void setWidthAndSign(Variables &var, string token);
-	bool checkFirstLine(string line);
+	bool checkOperationLine(string line);
+    void checkDuplicatedVariables();
 };
 
 #endif // !READINPUTFILE_H
