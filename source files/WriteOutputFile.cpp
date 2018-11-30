@@ -154,3 +154,18 @@ void WriteOutputFile::createHLSMHeader(ofstream & file)
 	file << "\tinput Clk, Rst, Start;" << endl;
 	file << "\toutput reg Done;" << endl << endl;
 }
+
+void WriteOutputFile::writeGraph(ofstream & file, Graph graph) {
+	edges = graph.getEdges();
+	nodes = graph.getNodes();
+	weight = graph.getWeight();
+	
+	// Testing --------------------------------------------
+	file << "Graph: \n" << "\tWeight: " << weight << "\n";
+	for (int temp = 0; temp < 10; temp++) {
+		file << "\tNode " << temp << ": " << nodes.at(temp).getOperation() << endl;
+		file << "\tEdge " << temp << ": " << edges.at(temp).getConditionalOperation() << endl;
+	}
+	file << "\n\n";
+	// ----------------------------------------------------
+}

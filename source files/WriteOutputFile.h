@@ -3,6 +3,7 @@
 #define WRITEOUTPUTFILE_H
 
 #include "ReadInputFile.h"
+#include "Graph.h"
 
 using namespace std;
 #include <fstream>
@@ -22,7 +23,14 @@ public:
 	string retrieveDatawidth(int width, string datatype);
 	void writeDatatypeInstantiation(ofstream &file, ReadInputFile &read);
 	void createHLSMHeader(ofstream & file);
+	void writeGraph(ofstream & file, Graph graph);
 	
+
+	// test
+	vector<Edges> edges;
+	vector<Nodes> nodes;
+	int weight;
+
 };
 
 #endif // !WRITEOUTPUTFILE_H

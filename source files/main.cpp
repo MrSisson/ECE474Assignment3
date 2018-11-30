@@ -30,6 +30,15 @@ int main(int argc, char* argv[]) {
 	Variables var;
 	ReadInputFile read;
 	WriteOutputFile write;
+	
+	// Testing Graph Class ------------------------
+	Graph graph;
+	Nodes tempNode;
+	Edges tempEdge;
+	int tempWeight = 0;
+	string cond = "Test Condition ";
+	string op = "Operation ";
+	// --------------------------------------------
 
 
 	inputFilename.open(argv[1]);
@@ -46,6 +55,24 @@ int main(int argc, char* argv[]) {
 		read.fetchVariables(inputFilename, var);
 		cout << "Fetching variables completed" << endl;						// DEBUGGING (Remove this)
 		// Do stuffs....
+
+		// Testing Graph Class -------------------------------
+		for (int temp = 0; temp < 10; temp++) {
+			cond = cond.substr(0, 15);
+			cond = cond + to_string(tempWeight);
+			op = op.substr(0, 10);
+			op = op + to_string(tempWeight);
+
+			tempEdge.setCondtionalOperation(cond);
+			tempNode.setEdges(&tempEdge);
+			tempNode.setOperation(op);
+
+			tempWeight++;
+			graph.setEdges(tempEdge);
+			graph.setNodes(tempNode);
+			graph.setWeight(tempWeight);
+		}
+		// ----------------------------------------------------
 
 		// close input file
 		inputFilename.close();
@@ -66,6 +93,7 @@ int main(int argc, char* argv[]) {
 		cout << "Wrote HLSM Header" << endl;								// DEBUGGING (Remove this)
 		write.writeDatatypeInstantiation(outputFilename, read);
 		cout << "Wrote Datatype Instantiations" << endl;					// DEBUGGING (Remove this)
+		write.writeGraph(outputFilename, graph);
 
 		// close output file
 		outputFilename.close();

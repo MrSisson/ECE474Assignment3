@@ -3,6 +3,7 @@
 #define READINPUTFILE_H
 
 #include "Variables.h"
+#include "Operations.h"
 
 class ReadInputFile {
 public:
@@ -10,6 +11,7 @@ public:
 	vector<Variables> inputList;
 	vector<Variables> outputList;
 	vector<Variables> registerList;
+	vector <Operations> operationList;
 
 	// constructor
 	ReadInputFile();

@@ -37,6 +37,7 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 		// cout << line << endl;	// Remove this; debugging only
 
 		if (this->checkOperationLine(line) == true) {	// checks if line is an operation
+			
 			break;
 		}
 		else {
@@ -188,7 +189,7 @@ void ReadInputFile::checkDuplicatedVariables(){
 	string compName;	// compare current variable name to this
 
 	while (exit == -1) {
-		// checking for duplicated variales in inputList
+		// checking for duplicated variables in inputList
 		tempList = inputList;
 		size = inputList.size();
 		for (int i = 0; i < size; i++) {
@@ -206,7 +207,7 @@ void ReadInputFile::checkDuplicatedVariables(){
 			}
 		}
 
-		// checking for duplicated variales in outputList
+		// checking for duplicated variables in outputList
 		tempList = outputList;
 		size = outputList.size();
 		for (int i = 0; i < size; i++) {
@@ -224,7 +225,7 @@ void ReadInputFile::checkDuplicatedVariables(){
 			}
 		}
 
-		// checking for duplicated variales in registerList
+		// checking for duplicated variables in registerList
 		tempList = registerList;
 		size = registerList.size();
 		for (int i = 0; i < size; i++) {
