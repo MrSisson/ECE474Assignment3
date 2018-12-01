@@ -148,9 +148,43 @@ void WriteOutputFile::writeDatatypeInstantiation(ofstream & file, ReadInputFile 
 	file << "\n\n";
 }
 
+/* Write Operations, pretty easy so far just pastes the operation contents into the file with some
+ * added syntax and spacing.
+ */
+void WriteOutputFile::writeOperations(ofstream &file, ReadInputFile &read) {
+	int index = 0;
+	int size;
+
+	size = read.operationList.size();
+
+	while (index != size) {
+
+		file << "\t" << read.operationList.at(index).getOperation() << ";\n";
+
+		index++;
+	}
+
+	file << "\n\n";
+}
+
 void WriteOutputFile::createHLSMHeader(ofstream & file)
 {
 	file << "module HLSM (Clk, Rst, Start, Done);" << endl << endl;
 	file << "\tinput Clk, Rst, Start;" << endl;
 	file << "\toutput reg Done;" << endl << endl;
+}
+
+void WriteOutputFile::writeGraph(ofstream & file, Graph graph) {
+	edges = graph.getEdges();
+	nodes = graph.getNodes();
+	weight = graph.getWeight();
+	
+	// Testing --------------------------------------------
+	file << "Graph: \n" << "\tWeight: " << weight << "\n";
+	for (int temp = 0; temp < 10; temp++) {
+		file << "\tNode " << temp << ": " << nodes.at(temp).getOperation() << endl;
+		file << "\tEdge " << temp << ": " << edges.at(temp).getConditionalOperation() << endl;
+	}
+	file << "\n\n";
+	// ----------------------------------------------------
 }

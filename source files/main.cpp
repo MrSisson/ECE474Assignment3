@@ -28,8 +28,19 @@ int main(int argc, char* argv[]) {
 
 	// Class objects
 	Variables var;
+	Operations op;
+	//Statements state;
 	ReadInputFile read;
 	WriteOutputFile write;
+	
+	// Testing Graph Class ------------------------
+	Graph graph;
+	Nodes tempNode;
+	Edges tempEdge;
+	int tempWeight = 0;
+	string cond = "Test Condition ";
+	string operation = "Operation ";
+	// --------------------------------------------
 
 
 	inputFilename.open(argv[1]);
@@ -41,11 +52,39 @@ int main(int argc, char* argv[]) {
 	// Get data from input file
 	if (inputFilename.is_open()) {
 		cout << "Opened File for read" << endl;								// DEBUGGING (Remove this)
+		
 		// fetching variables from input file
 		cout << "Fetching variables" << endl;								// DEBUGGING (Remove this)
 		read.fetchVariables(inputFilename, var);
 		cout << "Fetching variables completed" << endl;						// DEBUGGING (Remove this)
-		// Do stuffs....
+
+		// fetching operations from input file
+		cout << "Fetching operations" << endl;
+		read.fetchOperations(inputFilename, op);
+		cout << "Fetching operations completed" << endl;					// DEBUGGING (Remove this)
+
+		// fetching statements from input file
+		//cout << "Fetching statements" << endl;
+		//read.fetchStatements(inputFilename, state);
+		//cout << "Fetching statements completed" << endl;					// DEBUGGING (Remove this)
+		
+		// Testing Graph Class -------------------------------
+		for (int temp = 0; temp < 10; temp++) {
+			cond = cond.substr(0, 15);
+			cond = cond + to_string(tempWeight);
+			operation = operation.substr(0, 10);
+			operation = operation + to_string(tempWeight);
+
+			tempEdge.setCondtionalOperation(cond);
+			tempNode.setEdges(&tempEdge);
+			tempNode.setOperation(operation);
+
+			tempWeight++;
+			graph.setEdges(tempEdge);
+			graph.setNodes(tempNode);
+			graph.setWeight(tempWeight);
+		}
+		// ----------------------------------------------------
 
 		// close input file
 		inputFilename.close();
@@ -66,6 +105,9 @@ int main(int argc, char* argv[]) {
 		cout << "Wrote HLSM Header" << endl;								// DEBUGGING (Remove this)
 		write.writeDatatypeInstantiation(outputFilename, read);
 		cout << "Wrote Datatype Instantiations" << endl;					// DEBUGGING (Remove this)
+		write.writeOperations(outputFilename, read);
+		cout << "Wrote Operations" << endl;									// DEBUGGING (Remove this)
+		//write.writeGraph(outputFilename, graph);
 
 		// close output file
 		outputFilename.close();

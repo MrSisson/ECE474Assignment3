@@ -29,14 +29,23 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 	string line;	// store single input string
 	string token;	// string temp or word temp
 	string token2;
+	Operations op;  // for the break.
+
 	char lastChar;	// use for checking last character of a line or word
 
 	while (!file.eof()) {
 		getline(file, line);
 		istringstream streamLine(line);
 		// cout << line << endl;	// Remove this; debugging only
+		
+		if (this->checkStatementLine(line) == true) {
 
-		if (this->checkOperationLine(line) == true) {	// checks if line is an operation
+			break;
+		}
+		else if (this->checkOperationLine(line) == true) {	// checks if line is an operation
+			op.setOperation(line);
+			this->operationList.push_back(op); // put the first op on list, then break.
+
 			break;
 		}
 		else {
@@ -170,9 +179,78 @@ void ReadInputFile::setWidthAndSign(Variables &var, string token) {
 	}
 }
 
+void ReadInputFile::fetchOperations(ifstream &file, Operations &operation) {
+	string line;
+
+	// strings for finding operations:
+	/*
+	string output;
+	string in1;
+	string in2;
+	string sel;
+	string op;
+	*/
+
+	while (!file.eof()) {
+		getline(file, line);
+		string str;
+		istringstream streamLine(line);
+
+		streamLine >> str;		// skip in.
+		streamLine >> str;
+		streamLine >> str;
+		/* Commenting for now will want this, I'm thinking of making the statement have a vector of operations and saving if there is an open if/else.
+		 * Going to use the if/else as a container for the operations to make the initial graph creation easier, otherwise we would want to save locations
+		 * of {} for finding which operations (nodes) are linked.
+		if (this->checkStatementLine(line) == true) {
+			
+			break;
+		}*/
+		if (str.compare("=") == true) {
+
+			/* Just in case. May want to save inputs and output for linking nodes later, for now keeping these out to make sure it actually reads the operation and can print it.
+			streamLine >> output;
+			streamLine >> in1;					// Skip the = sign.
+
+			if (line.find_first_of(":") != string::npos) {
+				streamLine >> sel;
+				streamLine >> op;
+				streamLine >> in1;
+				streamLine >> in2;				// Skip the : sign.
+				streamLine >> in2;
+			}
+			else {
+				streamLine >> in1;
+				streamLine >> op;
+				streamLine >> in2;
+			}
+			*/
+
+			// Set Operation.
+			operation.setOperation(line);
+			this->operationList.push_back(operation);
+		}
+	}
+}
+
+/*
+void ReadInputFile::fetchStatements(ifstream &file, Variables &var) {
+
+}
+*/
+
 bool ReadInputFile::checkOperationLine(string line) {
 	bool flag = false;
 	size_t found = line.find_first_of("=+-*/><:?%");
+	if (found != string::npos) {
+		flag = true;	// flag high: found error!!
+	}
+	return flag;
+}
+
+bool ReadInputFile::checkStatementLine(string line) {
+	bool flag = false;
+	size_t found = line.find("if (");
 	if (found != string::npos) {
 		flag = true;	// flag high: found error!!
 	}
@@ -188,7 +266,7 @@ void ReadInputFile::checkDuplicatedVariables(){
 	string compName;	// compare current variable name to this
 
 	while (exit == -1) {
-		// checking for duplicated variales in inputList
+		// checking for duplicated variables in inputList
 		tempList = inputList;
 		size = inputList.size();
 		for (int i = 0; i < size; i++) {
@@ -206,7 +284,7 @@ void ReadInputFile::checkDuplicatedVariables(){
 			}
 		}
 
-		// checking for duplicated variales in outputList
+		// checking for duplicated variables in outputList
 		tempList = outputList;
 		size = outputList.size();
 		for (int i = 0; i < size; i++) {
@@ -224,7 +302,7 @@ void ReadInputFile::checkDuplicatedVariables(){
 			}
 		}
 
-		// checking for duplicated variales in registerList
+		// checking for duplicated variables in registerList
 		tempList = registerList;
 		size = registerList.size();
 		for (int i = 0; i < size; i++) {
