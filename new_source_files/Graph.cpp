@@ -37,21 +37,21 @@ int Graph::getWeight() {
 	return this->weight;
 }
 
-void Graph::calculateWeights(Operations &op)
-{
-	int tempWeight = -1;
+//void Graph::calculateWeights(Operations &op)
+//{
+//	int tempWeight = -1;
+//
+//	// Calculate weight by determining type of operation
+//
+//	this->weight = tempWeight;
+//}
 
-	// Calculate weight by determining type of operation
-
-	this->weight = tempWeight;
-}
-
-void Graph::setupNodesEdges(ReadInputFile &rif)
-{	
-	int tempStateNum = 0;
-	int tempNumCycles = 0;
-	string tempOperation = "\0";
-	for (Operations op : rif.operationList) {
-		this->nodes.
-	}
-}
+//void Graph::setupNodesEdges(ReadInputFile &rif)
+//{	
+//	int tempStateNum = 0;
+//	int tempNumCycles = 0;
+//	string tempOperation = "\0";
+//	for (Operations op : rif.operationList) {
+//		this->nodes.
+//	}
+//}

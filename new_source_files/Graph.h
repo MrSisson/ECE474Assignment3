@@ -7,8 +7,6 @@ class Nodes;
 
 #include "Edges.h"
 #include "Nodes.h"
-#include "Operations.h"
-#include "ReadInputFile.h"
 
 #include <string>
 #include <vector>
@@ -40,8 +38,8 @@ public:
 	//methods
 	// void generateALAPTimeTable(); // unsure where to place this yet
 	// void generateList_RSchedule(); // unsure where to plae this yet
-	void calculateWeights(Operations &op);
-	void setupNodesEdges(ReadInputFile &rif);
+	//void calculateWeights(Operations &op);
+	//void setupNodesEdges(ReadInputFile &rif);
 };
 
 #endif // !GRAPH_H
