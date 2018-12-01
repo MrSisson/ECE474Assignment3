@@ -36,3 +36,12 @@ vector<Edges> Graph::getEdges() {
 int Graph::getWeight() {
 	return this->weight;
 }
+
+void Graph::calculateWeights(Operations &op)
+{
+	int tempWeight = -1;
+
+	// Calculate weight by determining type of operation
+
+	this->weight = tempWeight;
+}

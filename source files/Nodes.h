@@ -35,6 +35,8 @@ public:
 	vector<Edges*> getEdges();
 	int getNumCycles();
 	string getOperation();
+
+
 };
 
 #endif	// !NODES_H
