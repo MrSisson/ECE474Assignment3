@@ -62,3 +62,5 @@ Variables Operations::getOut() {
 	return this->output;
 }
 */
+
+// methods

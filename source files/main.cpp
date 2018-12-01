@@ -67,24 +67,6 @@ int main(int argc, char* argv[]) {
 		//cout << "Fetching statements" << endl;
 		//read.fetchStatements(inputFilename, state);
 		//cout << "Fetching statements completed" << endl;					// DEBUGGING (Remove this)
-		
-		// Testing Graph Class -------------------------------
-		for (int temp = 0; temp < 10; temp++) {
-			cond = cond.substr(0, 15);
-			cond = cond + to_string(tempWeight);
-			operation = operation.substr(0, 10);
-			operation = operation + to_string(tempWeight);
-
-			tempEdge.setCondtionalOperation(cond);
-			tempNode.setEdges(&tempEdge);
-			tempNode.setOperation(operation);
-
-			tempWeight++;
-			graph.setEdges(tempEdge);
-			graph.setNodes(tempNode);
-			graph.setWeight(tempWeight);
-		}
-		// ----------------------------------------------------
 
 		// close input file
 		inputFilename.close();
@@ -93,10 +75,33 @@ int main(int argc, char* argv[]) {
 	else {	// Error!!
 		cout << "Error: Input file doesn't exists." << endl;
 		return -1;
+	} // Done: Get data from input file
+
+//////////// Generate graph ////////////////////////////////////////////////////////////////////////////////////////////////
+	// Testing Graph Class -------------------------------
+	for (int temp = 0; temp < 10; temp++) {
+		cond = cond.substr(0, 15);
+		cond = cond + to_string(tempWeight);
+		operation = operation.substr(0, 10);
+		operation = operation + to_string(tempWeight);
+
+		tempEdge.setCondtionalOperation(cond);
+		tempNode.setEdges(&tempEdge);
+		tempNode.setOperation(operation);
+
+		tempWeight++;
+		graph.setEdges(tempEdge);
+		graph.setNodes(tempNode);
+		graph.setWeight(tempWeight);
 	}
+	// ----------------------------------------------------
+	// Done: Generate graph
 
+//////////// Generate states //////////////////////////////////////////////////////////////////////////////////////////
 
-	// Generate output file
+	// Done: Generate states
+
+//////////// Generate output file ////////////////////////////////////////////////////////////////////////////////////
 	outputFilename.open(argv[3]);
 	if (outputFilename.is_open()) {
 		cout << "Opened file for write" << endl;							// DEBUGGING (Remove this)
@@ -116,8 +121,8 @@ int main(int argc, char* argv[]) {
 	else {	// Error!!
 		cout << "Error: Output file doesn't exists." << endl;				// DEBUGGING (Remove this)
 		return -1;
-	}
-	
+	}// Done: Generate output file 
+
 	cout << "Reached the end of main" << endl;								// DEBUGGING (Remove this)
 	return 0;
 }// end of main function
