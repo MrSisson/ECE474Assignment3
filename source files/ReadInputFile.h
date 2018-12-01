@@ -24,6 +24,7 @@ public:
 	bool checkOperationLine(string line);
 	bool checkStatementLine(string line);
     void checkDuplicatedVariables();
+	bool checksIfVariableInstantiated(string line);
 };
 
 #endif // !READINPUTFILE_H

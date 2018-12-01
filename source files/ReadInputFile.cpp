@@ -179,6 +179,120 @@ void ReadInputFile::setWidthAndSign(Variables &var, string token) {
 	}
 }
 
+// Checks if variables in the operation line has been instantiated first
+bool ReadInputFile::checksIfVariableInstantiated(string line) {
+	bool flag = false;
+	int find = -1;
+	int exit = -1;
+	istringstream streamLine(line);
+	
+	string firstVar;
+	streamLine >> firstVar;
+	while (exit == -1) {
+		// checking first variable
+		size_t found = firstVar.find_first_not_of("=+-*/><:?%");
+		if (found != string::npos) {
+
+			// 1st check: find 1st variable in output list
+			for (Variables outp : this->outputList) {
+				string temp = outp.getName();
+				if (temp.compare(firstVar) == 0) {
+					find = 1;
+					exit = 1;
+					break;
+				}
+				if (find == 1) {
+					break;
+				}
+			}
+
+			// 2nd check: if 1st variable not found in output list
+			// check register list
+			if (find == -1) {
+				for (Variables reg : this->registerList) {
+					string temp = reg.getName();
+					if (temp.compare(firstVar) == 0) {
+						find = 1;
+						exit = 1;
+						break;
+					}
+				}
+				if (find == 1) {
+					break;
+				}
+			}
+
+			// Final check:  1st variable should not be input
+			if (find == -1) {
+				for (Variables inp : this->inputList) {
+					string temp = inp.getName();
+					if (temp.compare(firstVar) == 0) {
+						find = 1;
+						exit = 1;
+						break;
+					}
+				}
+				if (find == 1) {
+					break;
+				}
+			}
+		}
+		
+		// checking next variable(s)
+		string nextVar;
+		while (streamLine >> nextVar) {
+			found = nextVar.find_first_not_of("=+-*/><:?%");
+			if (found != string::npos) {
+
+				for (Variables inp : this->inputList) {
+					string temp = inp.getName();
+					if (temp.compare(nextVar) == 0) {
+						find = 1;
+						exit = 1;
+						break;
+					}
+					if (find == 1) {
+						break;
+					}
+				}
+
+				if (find == -1) {
+					for (Variables outp : this->outputList) {
+						string temp = outp.getName();
+						if (temp.compare(nextVar) == 0) {
+							find = 1;
+							exit = 1;
+							break;
+						}
+						if (find == 1) {
+							break;
+						}
+					}
+				}
+
+				if (find == -1) {
+					for (Variables reg : this->registerList) {
+						string temp = reg.getName();
+						if (temp.compare(nextVar) == 0) {
+							find = 1;
+							exit = 1;
+							break;
+						}
+						if (find == 1) {
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	if (find == 1) {
+		flag = true;
+	}
+	return flag;
+}
+
+// fetch operations
 void ReadInputFile::fetchOperations(ifstream &file, Operations &operation) {
 	string line;
 
@@ -196,9 +310,9 @@ void ReadInputFile::fetchOperations(ifstream &file, Operations &operation) {
 		string str;
 		istringstream streamLine(line);
 
-		streamLine >> str;		// skip in.
-		streamLine >> str;
-		streamLine >> str;
+		//streamLine >> str;		// output variable
+		//streamLine >> str;		// operation symbol
+		//streamLine >> str;		// first variable after '='
 		/* Commenting for now will want this, I'm thinking of making the statement have a vector of operations and saving if there is an open if/else.
 		 * Going to use the if/else as a container for the operations to make the initial graph creation easier, otherwise we would want to save locations
 		 * of {} for finding which operations (nodes) are linked.
@@ -206,8 +320,8 @@ void ReadInputFile::fetchOperations(ifstream &file, Operations &operation) {
 			
 			break;
 		}*/
-		if (str.compare("=") == true) {
-
+		if (checkOperationLine(line)) {
+			
 			/* Just in case. May want to save inputs and output for linking nodes later, for now keeping these out to make sure it actually reads the operation and can print it.
 			streamLine >> output;
 			streamLine >> in1;					// Skip the = sign.
@@ -226,9 +340,18 @@ void ReadInputFile::fetchOperations(ifstream &file, Operations &operation) {
 			}
 			*/
 
-			// Set Operation.
-			operation.setOperation(line);
-			this->operationList.push_back(operation);
+			// Checks if variables has been previously instantiated
+			if (this->checksIfVariableInstantiated(line) == false) {
+				break;
+			}
+			else {
+				// Set Operation.
+				operation.setOperation(line);
+				this->operationList.push_back(operation);
+			}
+		}
+		else {
+			break;
 		}
 	}
 }
