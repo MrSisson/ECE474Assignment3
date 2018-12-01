@@ -148,6 +148,25 @@ void WriteOutputFile::writeDatatypeInstantiation(ofstream & file, ReadInputFile 
 	file << "\n\n";
 }
 
+/* Write Operations, pretty easy so far just pastes the operation contents into the file with some
+ * added syntax and spacing.
+ */
+void WriteOutputFile::writeOperations(ofstream &file, ReadInputFile &read) {
+	int index = 0;
+	int size;
+
+	size = read.operationList.size();
+
+	while (index != size) {
+
+		file << "\t" << read.operationList.at(index).getOperation() << ";\n";
+
+		index++;
+	}
+
+	file << "\n\n";
+}
+
 void WriteOutputFile::createHLSMHeader(ofstream & file)
 {
 	file << "module HLSM (Clk, Rst, Start, Done);" << endl << endl;

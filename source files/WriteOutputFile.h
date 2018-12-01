@@ -22,6 +22,7 @@ public:
 	// methods
 	string retrieveDatawidth(int width, string datatype);
 	void writeDatatypeInstantiation(ofstream &file, ReadInputFile &read);
+	void writeOperations(ofstream &file, ReadInputFile &read);
 	void createHLSMHeader(ofstream & file);
 	void writeGraph(ofstream & file, Graph graph);
 	
