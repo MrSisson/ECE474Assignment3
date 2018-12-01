@@ -41,21 +41,8 @@ int main(int argc, char* argv[]) {
 	//opening input and output files
 	translate mainThread;
 	ifstream inputFile;
-	inputFile.open(argv[1]);
 	ofstream outputFile;
 
-	if (inputFile.is_open()) {
-		//error checking (Ben)
-		if (mainThread.readInputFile(inputFile, outputFile) == false) {
-			cout << "Error in your input file." << endl;
-			inputFile.close();
-			return 0;
-		}
-
-		else {
-			inputFile.close();
-		}
-	}
 
 	inputFile.open(argv[1]);
 	if (inputFile.is_open()) {

@@ -25,6 +25,7 @@ public:
 	bool checkStatementLine(string line);
     void checkDuplicatedVariables();
 	bool checksIfVariableInstantiated(string line);
+	int handleOperations(ifstream &file);
 };
 
 #endif // !READINPUTFILE_H

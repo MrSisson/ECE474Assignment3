@@ -60,8 +60,9 @@ int main(int argc, char* argv[]) {
 
 		// fetching operations from input file
 		cout << "Fetching operations" << endl;
-		read.fetchOperations(inputFilename, op);
+		// read.fetchOperations(inputFilename, op);
 		cout << "Fetching operations completed" << endl;					// DEBUGGING (Remove this)
+		read.handleOperations(inputFilename);
 
 		// fetching statements from input file
 		//cout << "Fetching statements" << endl;
