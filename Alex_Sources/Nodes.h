@@ -15,27 +15,29 @@ class Nodes {
 
 private:
 	int stateNum;
-	vector<Edges*> edges;
+	vector<Edges> edges;
 	int numCycles;
 	string operation;
 
 public:
 	// constructor
 	Nodes();
-	Nodes(int newStateNum, Edges* newEdges, int newNumCycles, string op);
+	Nodes(int newStateNum, Edges newEdges, int newNumCycles, string op);
 
 	//setters
 	void setStateNum(int newStateNum);
-	void setEdges(Edges* newEdges);
+	void setEdges(Edges newEdges);
 	void setNumCycles(int newNumCycles);
 	void setOperation(string op);
 
 	//getters
 	int getStateNum();
-	vector<Edges*> getEdges();
+	vector<Edges> getEdges();
 	int getNumCycles();
 	string getOperation();
 
+	//Methods
+	void addEdge(Edges newEdge);
 
 };
 

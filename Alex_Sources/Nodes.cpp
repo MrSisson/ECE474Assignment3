@@ -5,7 +5,7 @@ using namespace std;
 // constructors
 Nodes::Nodes() {} // default constructor
 
-Nodes::Nodes(int newStateNum, Edges* newEdges, int newNumCycles, string op) {
+Nodes::Nodes(int newStateNum, Edges newEdges, int newNumCycles, string op) {
 	this->stateNum = newStateNum;
 	this->edges.push_back(newEdges);
 	this->numCycles = newNumCycles;
@@ -17,7 +17,7 @@ void Nodes::setStateNum(int newStateNum) {
 	this->stateNum = newStateNum;
 }	
 
-void Nodes::setEdges(Edges* newEdges) {
+void Nodes::setEdges(Edges newEdges) {
 	this->edges.push_back(newEdges);
 }
 
@@ -34,7 +34,7 @@ int Nodes::getStateNum() {
 	return this->stateNum;
 }
 
-vector<Edges*> Nodes::getEdges() {
+vector<Edges> Nodes::getEdges() {
 	return this->edges;
 }
 
@@ -44,4 +44,10 @@ int Nodes::getNumCycles() {
 
 string Nodes::getOperation() {
 	return this->operation;
+}
+
+//Methods
+
+void Nodes::addEdge(Edges newEdge) {
+	edges.push_back(newEdge);
 }

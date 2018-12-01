@@ -36,6 +36,8 @@ public:
 	int getWeight();
 
 	//methods
+	void addNode(Nodes newNode);
+
 	// void generateALAPTimeTable(); // unsure where to place this yet
 	// void generateList_RSchedule(); // unsure where to plae this yet
 	//void calculateWeights(Operations &op);

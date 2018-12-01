@@ -37,3 +37,6 @@ Nodes* Edges::getPrevNode() {
 Nodes* Edges::getNextNode() {
 	return this->nextNode;
 }
+
+//Methods
+

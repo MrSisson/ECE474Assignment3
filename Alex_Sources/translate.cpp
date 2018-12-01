@@ -220,72 +220,62 @@ bool translate::variableExists(string inputLine) {
 }
 
 
-string translate::handleOperations(int num, string inputLine, vector<variable> outputs, vector<variable> inputs, vector<variable> wires)
+int translate::handleOperations(int num, string inputLine, vector<variable> outputs, vector<variable> inputs, vector<variable> registers)
 {
 	string token, token2;
 	vector<string> inputsAndWires;
 	istringstream inputLineStream(inputLine);
 
-	variable *outputVariable, *firstVariable, *secondVariable;
-	variable *thirdVariable = NULL; //only used for mux
-	string translatedLine;
 	bool firstVarBitExtendZero = false;
 	bool secondVarBitExtendZero = false;
 	bool isSignedModule = false;
-	bool hasThirdInput = false;
 	bool validVariable = false;
 	unsigned int datawidth = 0;
 
-	outputVariable = NULL;
-	firstVariable = NULL;
-	secondVariable = NULL;
 
 	//verify output variable
 	inputLineStream >> token;
 	if (token.empty())
 	{
-		return translatedLine;
+		return 1;		//Valid line (empty, do nothing)
 	}
 	else if (token.length() >= 2)
 	{
 		if (token[0] == '/' && token[1] == '/')
 		{
-			return translatedLine;	//entire line is a comment
+			return 1;	//entire line is a comment	//Valid Line (comment, do nothing)
 		}
 	}
 	for (unsigned int i = 0; i < outputs.size(); ++i)
 	{
 		if (outputs[i].getName() == token)
 		{
-			validVariable = true;
-			outputVariable = &outputs[i];
+			validVariable = true;	//Valid Output
 			break;
 		}
 	}
 	if (!validVariable)
 	{
-		for (unsigned int i = 0; i < wires.size(); ++i)
+		for (unsigned int i = 0; i < registers.size(); ++i)
 		{
-			if (wires[i].getName() == token)
+			if (registers[i].getName() == token)
 			{
-				validVariable = true;
-				outputVariable = &wires[i];
+				validVariable = true;	//Valid Output
 				break;
 			}
 		}
 	}
 	if (!validVariable)
 	{
-		//cout << "cannot assign this variable: " << token << "\t (must be output or wire)" << '\n';	//Error
-		return "";
+		//cout << "cannot assign this variable: " << token << "\t (must be output or wire)" << '\n';	//ERROR
+		return -1;																					//ERROR
 	}
-	isSignedModule = outputVariable->getIsSigned();
 
 	inputLineStream >> token;
 	if (token != "=")
 	{
-		//cout << "invalid operation - output must be set equal to operation" << "\n";	//Error
-		return "";
+		//cout << "invalid operation - output must be set equal to operation" << "\n";	//ERROR
+		return -1;																		//ERROR
 	}
 
 	//verify first variable
@@ -294,12 +284,11 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 
 	if (token.length() != 0)
 	{
-		for (unsigned int i = 0; i < wires.size(); ++i)
+		for (unsigned int i = 0; i < registers.size(); ++i)
 		{
-			if (wires[i].getName() == token)
+			if (registers[i].getName() == token)
 			{
-				validVariable = true;
-				firstVariable = &wires[i];
+				validVariable = true;	//Valid first Variable after operator
 				break;
 			}
 		}
@@ -310,8 +299,7 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 		{
 			if (inputs[i].getName() == token)
 			{
-				validVariable = true;
-				firstVariable = &inputs[i];
+				validVariable = true;	//Valid first Variable after operator
 				break;
 			}
 		}
@@ -322,16 +310,15 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 		{
 			if (outputs[i].getName() == token)
 			{
-				validVariable = true;
-				firstVariable = &outputs[i];
+				validVariable = true;	//Valid first Variable after operator
 				break;
 			}
 		}
 	}
 	if (!validVariable)
 	{
-		//cout << "Could not identity input/wire variable: " << token << " \n";	//Error
-		return "";
+		//cout << "Could not identity input/wire variable: " << token << " \n";	
+		return -1;																//ERROR
 	}
 
 	//identify operator
@@ -356,12 +343,11 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 	//verify second variable
 	if (token2.length() != 0)
 	{
-		for (unsigned int i = 0; i < wires.size(); ++i)
+		for (unsigned int i = 0; i < registers.size(); ++i)
 		{
-			if (wires[i].getName() == token2)
+			if (registers[i].getName() == token2)
 			{
-				validVariable = true;
-				secondVariable = &wires[i];
+				validVariable = true;	//Valid second Variable after operator
 				break;
 			}
 		}
@@ -372,8 +358,7 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 			{
 				if (inputs[i].getName() == token2)
 				{
-					validVariable = true;
-					secondVariable = &inputs[i];
+					validVariable = true;	//Valid second Variable after operator
 					break;
 				}
 			}
@@ -384,97 +369,63 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 			{
 				if (outputs[i].getName() == token2)
 				{
-					validVariable = true;
-					secondVariable = &outputs[i];
+					validVariable = true;	//Valid second Variable after operator
 					break;
 				}
 			}
 		}
 		if (!validVariable)
 		{
-			//cout << "Invalid variable: " << token2 << "\n";	//Error
-			return "";
+			//cout << "Invalid variable: " << token2 << "\n";	//ERROR
+			return -1;											//ERROR
 		}
 	}
 
-	datawidth = outputVariable->getWidth();
+	//datawidth = outputVariable->getWidth();		// Possibly don't care about datawidth here anymore
 
-	if (isSignedModule)
-	{
-		if (firstVariable->getWidth() < datawidth)
-		{	//check if we need to zero extend unsigned values
-			if (!firstVariable->getIsSigned())
-			{
-				firstVarBitExtendZero = true;
-			}
-		}
-		if (secondVariable != NULL)
-		{
-			if (secondVariable->getWidth() < datawidth)
-			{
-				if (!secondVariable->getIsSigned())
-				{
-					secondVarBitExtendZero = true;
-				}
-			}
-		}
-	}
 		//identify operator
 	if (token.empty())	//REG
 	{
-		translatedLine += "REG #(.DATAWIDTH(" + to_string(datawidth) + ")) reg" + to_string(num) + "( ";
-		if (firstVarBitExtendZero && isSignedModule)
-		{
-			translatedLine += "$signed({1'b0," + firstVariable->getName() + "}), Clk, Rst, ";
-		}
-		else
-		{
-			translatedLine += firstVariable->getName() + ", Clk, Rst, ";
-		}
-		translatedLine += outputVariable->getName() + ");\n";
-		//cout << translatedLine << '\n';
-		return translatedLine;			//Valid output
 
+		return 1;			//Valid output
 	}
-	if (!secondVariable == NULL)
+	if (validVariable)	//Means there was a second variable, indicating an operation other than x = y
 	{
 		if (token == "+")		//ADD
 		{
-			translatedLine += "ADD #(.DATAWIDTH(" + to_string(datawidth) + ")) add" + to_string(num) + "( ";
+			//If token2 is empty, then no variable on other side of operator == error
 		}
 		else if (token == "-")		//SUB
 		{
-			translatedLine += "SUB #(.DATAWIDTH(" + to_string(datawidth) + ")) sub" + to_string(num) + "( ";
+			
 		}
 		else if (token == "*")		//MUL
 		{
-			translatedLine += "MUL #(.DATAWIDTH(" + to_string(datawidth) + ")) mul" + to_string(num) + "( ";
+			
 		}
 		else if (token == "<<")		//SHL
 		{
-			translatedLine += "SHL #(.DATAWIDTH(" + to_string(datawidth) + ")) shl" + to_string(num) + "( ";
+			
 		}
 		else if (token == ">>")		//SHR
 		{
-			translatedLine += "SHR #(.DATAWIDTH(" + to_string(datawidth) + ")) shr" + to_string(num) + "( ";
+			
 		}
 		else if (token == "?")		//MUX
 		{
 			inputLineStream >> token;
-			if (token == ":")
+			if (token == ":")	//Mux operation continues
 			{
 				validVariable = false;
 				inputLineStream >> token;
-				thirdVariable = firstVariable;
 
 				if (token.length() != 0)
 				{
-					for (unsigned int i = 0; i < wires.size(); ++i)
+					for (unsigned int i = 0; i < registers.size(); ++i)
 					{
-						if (wires[i].getName() == token)
+						if (registers[i].getName() == token)
 						{
-							validVariable = true;
-							firstVariable = &wires[i];
+							validVariable = true;	//Valid third variable after = operator (already verified 2nd before checking operation type
 							break;
 						}
 					}
@@ -485,8 +436,7 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 					{
 						if (inputs[i].getName() == token)
 						{
-							validVariable = true;
-							firstVariable = &inputs[i];
+							validVariable = true;	//Valid third variable after = operator
 							break;
 						}
 					}
@@ -497,8 +447,7 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 					{
 						if (outputs[i].getName() == token)
 						{
-							validVariable = true;
-							firstVariable = &outputs[i];
+							validVariable = true;	//Valid third variable after = operator
 							break;
 						}
 					}
@@ -506,142 +455,46 @@ string translate::handleOperations(int num, string inputLine, vector<variable> o
 				if (!validVariable)
 				{
 					//cout << "Invalid variable: " << token << "\n";		//ERROR
-					translatedLine = "";
-					return translatedLine;
-				}
-				else
-				{
-					translatedLine += "MUX2x1 #(.DATAWIDTH(" + to_string(datawidth) + ")) mux" + to_string(num) + "( ";
-					hasThirdInput = true;
-					if (isSignedModule)
-					{
-						if (firstVariable->getWidth() < datawidth)
-						{	//check if we need to zero extend unsigned values
-							if (!firstVariable->getIsSigned())
-							{
-								firstVarBitExtendZero = true;
-							}
-							else
-							{
-								firstVarBitExtendZero = false;
-							}
-						}
-						else
-						{
-							firstVarBitExtendZero = false;
-						}
-					}
+					return -1;												//ERROR missing third variable for mux comparison
 				}
 			}
 			else
 			{
 				//cout << "Invalid operator: " << token << "\n";		//ERROR
-				return "";
+				return -1;												//ERROR
 			}
 
 		}
 		else		//must be comparator or invalid operator
 		{
-			translatedLine = "";
-			if (secondVariable != NULL)
-			{	//get datawidth of module
-				if (secondVariable->getWidth() > firstVariable->getWidth())
-				{
-					datawidth = secondVariable->getWidth();
-				}
-				else
-				{
-					datawidth = firstVariable->getWidth();
-				}
-				//check if module is signed
-				if (secondVariable->getIsSigned() || firstVariable->getIsSigned())
-				{
-					isSignedModule = true;
-					translatedLine += "COMP #(.DATAWIDTH(" + to_string(datawidth) + ")) comp" + to_string(num) + "( ";
-					if (!firstVariable->getIsSigned())
-					{
-						translatedLine += "$signed({1'b0," + firstVariable->getName() + "}), ";
-					}
-					else
-					{
-						translatedLine += firstVariable->getName() + ", ";
-					}
-					if (!secondVariable->getIsSigned())
-					{
-						translatedLine += "$signed({1'b0," + secondVariable->getName() + "}), ";
-					}
-					else
-					{
-						translatedLine += secondVariable->getName() + ", ";
-					}
-				}
-				else
-				{
-					isSignedModule = false;
-					translatedLine += "COMP #(.DATAWIDTH(" + to_string(datawidth) + ")) comp" + to_string(num) + "( "
-						+ firstVariable->getName() + ", " + secondVariable->getName() + ", ";
-				}
-
-				//determine output to wire
-				if (token == ">")
-				{
-					translatedLine += outputVariable->getName() + ", 0, 0);\n";
-				}
-				else if (token == "==")
-				{
-					translatedLine += "0, 0, " + outputVariable->getName() + ");\n";
-				}
-				else if (token == "<")
-				{
-					translatedLine += "0, " + outputVariable->getName() + ", 0);\n";
-				}
-				else
-				{
-					//cout << "Invalid operator: " << token << "\n";	//ERROR
-					return "";
-				}
+			//determine output to wire
+			if (token == ">")
+			{
+					
+			}
+			else if (token == "==")
+			{
+					
+			}
+			else if (token == "<")
+			{
+					
 			}
 			else
 			{
-				//cout << "Missing operator or variable: " << token << '\n';	//ERROR
-				translatedLine = "";
-				return translatedLine;
+				//cout << "Invalid operator: " << token << "\n";	//ERROR
+				return -1;												//ERROR
 			}
+
 			//cout << translatedLine << "\n";
-			return translatedLine;	//valid output
+			return 1;							//valid output
 		}
 	}
 	else
 	{
-		//cout << "Incomplete operation \n";		//ERROR
-		return "";
+		//cout << "Incomplete operation \n";			//ERROR
+		return -1;												//ERROR
 	}
 
-	//all require this ********** (EXCEPT comparator)
-	if (firstVarBitExtendZero && isSignedModule)
-	{
-		translatedLine += "$signed({1'b0," + firstVariable->getName() + "}), ";
-	}
-	else
-	{
-		translatedLine += firstVariable->getName() + ", ";
-	}
-	if (secondVarBitExtendZero && isSignedModule)
-	{
-		translatedLine += "$signed({1'b0," + secondVariable->getName() + "}), ";
-	}
-	else
-	{
-		translatedLine += secondVariable->getName() + ", ";
-	}
-	if (hasThirdInput)
-	{
-		translatedLine += thirdVariable->getName() + ", ";
-	}
-	translatedLine += outputVariable->getName() + ");\n";
-	//cout << translatedLine << "\n";
-	//*****************************
-
-
-	return translatedLine + "\n";
+	return 1;
 }

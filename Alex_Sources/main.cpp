@@ -8,6 +8,7 @@
 // Headers 
 #include "variable.h"
 #include "translate.h"
+#include "Graph.h"
 
 using namespace std;
 
@@ -28,13 +29,15 @@ string operations(int num, string line);
 ///////////// FU N C T I O N   M A I N //////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[]) {
 
-	if (argc != 3){
-		cout << "Incorrect arguments.\nTry: dpgen netlistFile verilogFile";
+	if (argc != 4) {
+		cout << "ERROR: Incorrect arguments." << endl;
+		cout << "Correct argumets:\thlsyn cFile latency verilogFile" << endl;
 		return 0;
 	}
 
 	string inputFileLine;
 	string moduleLine = "`timescale 1ns / 1ps\n\nmodule ";
+	
 	//opening input and output files
 	translate mainThread;
 	ifstream inputFile;
@@ -76,11 +79,9 @@ int main(int argc, char* argv[]) {
 
 	inputFile.open(argv[1]);
 	if (inputFile.is_open()) {
-
-			//ALEX signed modules have S in name??
 			int num = 0;
 				for (inputFileLine; getline(inputFile, inputFileLine); ) {
-					outputFileStrings.push_back(mainThread.handleOperations(num, inputFileLine, outputVariables, inputVariables, wireVariables));
+					//outputFileStrings.push_back(mainThread.handleOperations(num, inputFileLine, outputVariables, inputVariables, wireVariables));
 						num += 1;
 				}
 			inputFile.close();

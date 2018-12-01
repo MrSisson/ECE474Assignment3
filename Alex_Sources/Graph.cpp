@@ -37,6 +37,12 @@ int Graph::getWeight() {
 	return this->weight;
 }
 
+//Methods
+
+void Graph::addNode(Nodes newNode) {
+	nodes.push_back(newNode);
+}
+
 //void Graph::calculateWeights(Operations &op)
 //{
 //	int tempWeight = -1;
