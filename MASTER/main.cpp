@@ -61,14 +61,15 @@ int main(int argc, char* argv[]) {
 
 		// fetching operations from input file
 		cout << "Fetching operations" << endl;
-		// read.fetchOperations(inputFilename, op);
+		read.fetchOperations(inputFilename, op);
 		cout << "Fetching operations completed" << endl;					// DEBUGGING (Remove this)
-		read.handleOperations(inputFilename, &graph);
 
 		// fetching statements from input file
 		//cout << "Fetching statements" << endl;
 		//read.fetchStatements(inputFilename, state);
 		//cout << "Fetching statements completed" << endl;					// DEBUGGING (Remove this)
+
+		read.handleOperations(inputFilename, &graph);
 
 		// close input file
 		inputFilename.close();
@@ -88,7 +89,7 @@ int main(int argc, char* argv[]) {
 		operation = operation + to_string(tempWeight);
 
 		tempEdge.setCondtionalOperation(cond);
-		tempNode.setEdges(&tempEdge);
+		tempNode.setEdges(tempEdge);
 		tempNode.setOperation(operation);
 
 		tempWeight++;

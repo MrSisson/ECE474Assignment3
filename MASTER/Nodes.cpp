@@ -1,7 +1,7 @@
 #include "Nodes.h"
 
 using namespace std;
- 
+
 // constructors
 Nodes::Nodes() {} // default constructor
 
@@ -15,7 +15,7 @@ Nodes::Nodes(int newStateNum, Edges newEdges, int newNumCycles, string op) {
 // setters
 void Nodes::setStateNum(int newStateNum) {
 	this->stateNum = newStateNum;
-}	
+}
 
 void Nodes::setEdges(Edges newEdges) {
 	this->edges.push_back(newEdges);
