@@ -6,6 +6,7 @@
 
 #include <string> 
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -15,10 +16,13 @@ class Nodes {
 
 private:
 	int stateNum;
-	vector<Edges> edges;
-	int numCycles;
-	string operation;
+	int asapTime;
 	int alapTime;
+	int numCycles;
+	int ifStatementLevel;
+	vector<Edges> edges;
+	string operation;
+	vector<string> variablesInvolved; //First variable is always the output
 
 public:
 	// constructor
@@ -27,18 +31,28 @@ public:
 
 	//setters
 	void setStateNum(int newStateNum);
-	void setEdges(Edges newEdges);
+	void setAsapTime(int newTime);
+	void setAlapTime(int newTime);
 	void setNumCycles(int newNumCycles);
+	void setIfStatementLevel(int level);
+	void setEdges(Edges newEdges);
 	void setOperation(string op);
+	void setVariablesInvolved(vector<string> vbs);
 
 	//getters
 	int getStateNum();
-	vector<Edges> getEdges();
+	int getAsapTime();
+	int getAlapTime();
 	int getNumCycles();
+	int getIfStatementLevel();
+	vector<Edges> getEdges();
 	string getOperation();
+	vector<string> getVariablesInvolved();
+	string getOutputVariable();
 
 	//Methods
 	void addEdge(Edges newEdge);
+	void printNode();
 
 };
 

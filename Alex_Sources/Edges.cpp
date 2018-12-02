@@ -39,4 +39,7 @@ Nodes* Edges::getNextNode() {
 }
 
 //Methods
-
+void Edges::printEdge() {
+	//cout << "\tPrevious: Node-" << prevNode->getStateNum() << endl;
+	cout << "\tNext Node:     Node-" << nextNode->getStateNum() << endl;
+}

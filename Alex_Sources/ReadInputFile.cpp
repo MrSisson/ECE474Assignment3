@@ -58,6 +58,12 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 				lastChar = token2.back();		// get last char of word
 				while (lastChar == ',') {
 					token2.pop_back();
+					for (int i = 0; i < token2.length(); i++) {
+						if (token2.at(i) == ' ' || token2.at(i) == '\t') {
+							token2.erase(i, 1);
+							i--;
+						}
+					}
 					var.setName(token2);
 					setWidthAndSign(var, token);
 					this->inputList.push_back(var);
@@ -65,6 +71,12 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 					lastChar = token2.back();
 				}
 				// last variable
+				for (int i = 0; i < token2.length(); i++) {
+					if (token2.at(i) == ' ' || token2.at(i) == '\t') {
+						token2.erase(i, 1);
+						i--;
+					}
+				}
 				var.setName(token2);
 				setWidthAndSign(var, token);
 				this->inputList.push_back(var);
@@ -78,6 +90,12 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 				lastChar = token2.back();		// get last char of word
 				while (lastChar == ',') {
 					token2.pop_back();
+					for (int i = 0; i < token2.length(); i++) {
+						if (token2.at(i) == ' ' || token2.at(i) == '\t') {
+							token2.erase(i, 1);
+							i--;
+						}
+					}
 					var.setName(token2);
 					setWidthAndSign(var, token);
 					this->outputList.push_back(var);
@@ -85,6 +103,12 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 					lastChar = token2.back();
 				}
 				// last variable
+				for (int i = 0; i < token2.length(); i++) {
+					if (token2.at(i) == ' ' || token2.at(i) == '\t') {
+						token2.erase(i, 1);
+						i--;
+					}
+				}
 				var.setName(token2);
 				setWidthAndSign(var, token);
 				this->outputList.push_back(var);
@@ -98,6 +122,12 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 				lastChar = token2.back();		// get last char of word
 				while (lastChar == ',') {
 					token2.pop_back();
+					for (int i = 0; i < token2.length(); i++) {
+						if (token2.at(i) == ' ' || token2.at(i) == '\t') {
+							token2.erase(i, 1);
+							i--;
+						}
+					}
 					var.setName(token2);
 					setWidthAndSign(var, token);
 					this->registerList.push_back(var);
@@ -105,6 +135,12 @@ void ReadInputFile::fetchVariables(ifstream &file, Variables &var) {
 					lastChar = token2.back();
 				}
 				// last variable
+				for (int i = 0; i < token2.length(); i++) {
+					if (token2.at(i) == ' ' || token2.at(i) == '\t') {
+						token2.erase(i, 1);
+						i--;
+					}
+				}
 				var.setName(token2);
 				setWidthAndSign(var, token);
 				this->registerList.push_back(var);
@@ -449,12 +485,21 @@ void ReadInputFile::checkDuplicatedVariables(){
 int ReadInputFile::handleOperations(ifstream &file, Graph* graph){ 
 	string inputLine;
 	string token, token2;
+	Nodes newNode;
+	vector<string> allVariables;
+	vector<string> ifStatementConditions;
+	unsigned int insideIfStatements = 0;
 
 	bool validVariable = false;
 	bool doneWithLine = false;
+	bool isIfElseStatement = false;
+	bool skipLine = false;
+	int stateNum = 0;
 
 	while (!file.eof()) {
+		skipLine = false;
 		doneWithLine = false;
+		isIfElseStatement = false;
 		getline(file, inputLine);
 		istringstream inputLineStream(inputLine);
 		//verify output variable
@@ -462,13 +507,42 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 		if (token.empty())
 		{
 			doneWithLine = true;		//Valid line (empty, do nothing)
+			skipLine = true;
 		}
 		else if (token.length() >= 2)
 		{
 			if (token[0] == '/' && token[1] == '/')
 			{
 				doneWithLine = true;	//entire line is a comment	//Valid Line (comment, do nothing)
+				skipLine = true;
 			}
+			else if (token.compare("input") == 0 || token.compare("output") == 0 || token.compare("variable") == 0)
+			{
+				doneWithLine = true;		//Line is valid, but not an operation
+				skipLine = true;
+			}
+		}
+		if (!doneWithLine) {
+			if (token[0] == '{')
+			{
+				doneWithLine = true;
+				skipLine = true;
+			}
+			if (token[0] == '}')
+			{
+				insideIfStatements--;
+				ifStatementConditions.pop_back();
+				doneWithLine = true;
+				skipLine = true;
+			}
+		}
+		if (!doneWithLine && token.find("if") != string::npos)
+		{
+			insideIfStatements++;
+			ifStatementConditions.push_back(inputLine);
+			//inputLine.erase(std::remove(inputLine.begin(), inputLine.end(), '\n'), inputLine.end());	//Removes newline, may not be neccessary
+			doneWithLine = true;
+			isIfElseStatement = true;
 		}
 		if (!doneWithLine) {
 			for (unsigned int i = 0; i < outputList.size(); ++i)
@@ -476,6 +550,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 				if (outputList[i].getName() == token)
 				{
 					validVariable = true;	//Valid Output
+					allVariables.push_back(token);
 					break;
 				}
 			}
@@ -486,6 +561,8 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 					if (registerList[i].getName() == token)
 					{
 						validVariable = true;	//Valid Output
+						allVariables.push_back(token);
+						//cout << "output: " << token << endl;
 						break;
 					}
 				}
@@ -514,6 +591,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 					if (registerList[i].getName() == token)
 					{
 						validVariable = true;	//Valid first Variable after operator
+						allVariables.push_back(token);
 						break;
 					}
 				}
@@ -525,6 +603,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 					if (inputList[i].getName() == token)
 					{
 						validVariable = true;	//Valid first Variable after operator
+						allVariables.push_back(token);
 						break;
 					}
 				}
@@ -536,6 +615,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 					if (outputList[i].getName() == token)
 					{
 						validVariable = true;	//Valid first Variable after operator
+						allVariables.push_back(token);
 						break;
 					}
 				}
@@ -573,6 +653,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 					if (registerList[i].getName() == token2)
 					{
 						validVariable = true;	//Valid second Variable after operator
+						allVariables.push_back(token);
 						break;
 					}
 				}
@@ -584,6 +665,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 						if (inputList[i].getName() == token2)
 						{
 							validVariable = true;	//Valid second Variable after operator
+							allVariables.push_back(token);
 							break;
 						}
 					}
@@ -595,6 +677,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 						if (outputList[i].getName() == token2)
 						{
 							validVariable = true;	//Valid second Variable after operator
+							allVariables.push_back(token);
 							break;
 						}
 					}
@@ -608,14 +691,14 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 				//identify operator
 			if (token.empty())	//REG
 			{
-
+				newNode.setOperation(inputLine);
 				doneWithLine = true;			//Valid output
 			}
 			if (validVariable && !doneWithLine)	//Means there was a second variable, indicating an operation other than x = y
 			{
 				if (token == "+" || token == "-" || token == "*" || token == "<<" || token == ">>")		//ADD, SUB, MUL, SHL, SHR
 				{
-					
+					newNode.setOperation(inputLine);
 					doneWithLine = true;
 				}
 				else if (token == "?")		//MUX
@@ -633,6 +716,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 								if (registerList[i].getName() == token)
 								{
 									validVariable = true;	//Valid third variable after = operator (already verified 2nd before checking operation type
+									allVariables.push_back(token);
 									break;
 								}
 							}
@@ -644,6 +728,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 								if (inputList[i].getName() == token)
 								{
 									validVariable = true;	//Valid third variable after = operator
+									allVariables.push_back(token);
 									break;
 								}
 							}
@@ -655,6 +740,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 								if (outputList[i].getName() == token)
 								{
 									validVariable = true;	//Valid third variable after = operator
+									allVariables.push_back(token);
 									break;
 								}
 							}
@@ -663,6 +749,10 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 						{
 							//cout << "Invalid variable: " << token << "\n";		//ERROR
 							return -1;												//ERROR missing third variable for mux comparison
+						}
+						else {
+							newNode.setOperation(inputLine);
+							doneWithLine = true;
 						}
 					}
 					else
@@ -694,7 +784,8 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 					}
 
 					//cout << translatedLine << "\n";
-					return 1;							//valid output
+					newNode.setOperation(inputLine);
+					doneWithLine = true;							//valid output
 				}
 			}
 			else if (!doneWithLine)
@@ -703,8 +794,38 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 				return -1;												//ERROR
 			}
 		} 
+		//At this point, must be valid operation or edge condition ( i.e. if(blah) )
+
+		if (!isIfElseStatement && !skipLine) {
+			newNode.setStateNum(stateNum);
+			newNode.setVariablesInvolved(allVariables);
+			if (insideIfStatements == 0) {
+				graph->addNode(newNode, "", 0);
+			}
+			else {
+				graph->addNode(newNode, ifStatementConditions.back(), insideIfStatements);
+			}
+
+			stateNum++;
+		}
+
 	}	//End of File line iteration
 	
 
 	return 1;
+} //End of HandleOperations
+
+void ReadInputFile::printVariables() {
+	cout << "Inputs: " << endl;
+	for (Variables vb : inputList) {
+		cout << "\t" << vb.getName() << "..." << endl;
+	}
+	cout << endl << "Outputs: " << endl;
+	for (Variables op : outputList) {
+		cout << "\t" << op.getName() << "..." << endl;
+	}
+	cout << endl << "Registers: " << endl;
+	for (Variables rg : registerList) {
+		cout << "\t" << rg.getName() << "..." << endl;
+	}
 }

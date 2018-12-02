@@ -10,6 +10,7 @@ class Nodes;
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -34,9 +35,10 @@ public:
 	vector<Nodes> getNodes();
 	vector<Edges> getEdges();
 	int getWeight();
+	unsigned int getNumNodes();
 
 	//methods
-	void addNode(Nodes newNode);
+	void addNode(Nodes newNode, string edgeCondition, int ifStatementLevel);
 	
 
 	// void generateALAPTimeTable(); // unsure where to place this yet
