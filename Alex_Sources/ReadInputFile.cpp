@@ -446,7 +446,7 @@ void ReadInputFile::checkDuplicatedVariables(){
 	}
 }
 
-int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
+int ReadInputFile::handleOperations(ifstream &file, Graph* graph){ 
 	string inputLine;
 	string token, token2;
 
