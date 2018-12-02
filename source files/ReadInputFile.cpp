@@ -446,146 +446,85 @@ void ReadInputFile::checkDuplicatedVariables(){
 	}
 }
 
-int ReadInputFile::handleOperations(ifstream &file){
+int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 	string inputLine;
 	string token, token2;
-	
 
-	bool firstVarBitExtendZero = false;
-	bool secondVarBitExtendZero = false;
-	bool isSignedModule = false;
 	bool validVariable = false;
-	unsigned int datawidth = 0;
+	bool doneWithLine = false;
 
 	while (!file.eof()) {
+		doneWithLine = false;
 		getline(file, inputLine);
 		istringstream inputLineStream(inputLine);
 		//verify output variable
 		inputLineStream >> token;
 		if (token.empty())
 		{
-			return 1;		//Valid line (empty, do nothing)
+			doneWithLine = true;		//Valid line (empty, do nothing)
 		}
 		else if (token.length() >= 2)
 		{
 			if (token[0] == '/' && token[1] == '/')
 			{
-				return 1;	//entire line is a comment	//Valid Line (comment, do nothing)
+				doneWithLine = true;	//entire line is a comment	//Valid Line (comment, do nothing)
 			}
 		}
-		for (unsigned int i = 0; i < outputList.size(); ++i)
-		{
-			if (outputList[i].getName() == token)
+		if (!doneWithLine) {
+			for (unsigned int i = 0; i < outputList.size(); ++i)
 			{
-				validVariable = true;	//Valid Output
-				break;
-			}
-		}
-		if (!validVariable)
-		{
-			for (unsigned int i = 0; i < registerList.size(); ++i)
-			{
-				if (registerList[i].getName() == token)
+				if (outputList[i].getName() == token)
 				{
 					validVariable = true;	//Valid Output
 					break;
 				}
 			}
-		}
-		if (!validVariable)
-		{
-			//cout << "cannot assign this variable: " << token << "\t (must be output or wire)" << '\n';	//ERROR
-			return -1;																					//ERROR
-		}
-
-		inputLineStream >> token;
-		if (token != "=")
-		{
-			//cout << "invalid operation - output must be set equal to operation" << "\n";	//ERROR
-			return -1;																		//ERROR
-		}
-
-		//verify first variable
-		validVariable = false;
-		inputLineStream >> token;
-
-		if (token.length() != 0)
-		{
-			for (unsigned int i = 0; i < registerList.size(); ++i)
+			if (!validVariable)
 			{
-				if (registerList[i].getName() == token)
+				for (unsigned int i = 0; i < registerList.size(); ++i)
 				{
-					validVariable = true;	//Valid first Variable after operator
-					break;
+					if (registerList[i].getName() == token)
+					{
+						validVariable = true;	//Valid Output
+						break;
+					}
 				}
 			}
-		}
-		if (!validVariable)
-		{
-			for (unsigned int i = 0; i < inputList.size(); ++i)
+			if (!validVariable)
 			{
-				if (inputList[i].getName() == token)
-				{
-					validVariable = true;	//Valid first Variable after operator
-					break;
-				}
+				//cout << "cannot assign this variable: " << token << "\t (must be output or wire)" << '\n';	//ERROR
+				return -1;																					//ERROR
 			}
-		}
-		if (!validVariable)
-		{
-			for (unsigned int i = 0; i < outputList.size(); ++i)
-			{
-				if (outputList[i].getName() == token)
-				{
-					validVariable = true;	//Valid first Variable after operator
-					break;
-				}
-			}
-		}
-		if (!validVariable)
-		{
-			//cout << "Could not identity input/wire variable: " << token << " \n";	
-			return -1;																//ERROR
-		}
 
-		//identify operator
-		validVariable = false;
-		if (inputLineStream.eof())
-		{
-			token = "";
-		}
-		else
-		{
 			inputLineStream >> token;
-		}
-		if (inputLineStream.eof())
-		{
-			token2 = "";
-		}
-		else
-		{
-			inputLineStream >> token2;
-		}
-
-		//verify second variable
-		if (token2.length() != 0)
-		{
-			for (unsigned int i = 0; i < registerList.size(); ++i)
+			if (token != "=")
 			{
-				if (registerList[i].getName() == token2)
-				{
-					validVariable = true;	//Valid second Variable after operator
-					break;
-				}
+				//cout << "invalid operation - output must be set equal to operation" << "\n";	//ERROR
+				return -1;																		//ERROR
 			}
 
+			//verify first variable
+			validVariable = false;
+			inputLineStream >> token;
+
+			if (token.length() != 0)
+			{
+				for (unsigned int i = 0; i < registerList.size(); ++i)
+				{
+					if (registerList[i].getName() == token)
+					{
+						validVariable = true;	//Valid first Variable after operator
+						break;
+					}
+				}
+			}
 			if (!validVariable)
 			{
 				for (unsigned int i = 0; i < inputList.size(); ++i)
 				{
-					if (inputList[i].getName() == token2)
+					if (inputList[i].getName() == token)
 					{
-						validVariable = true;	//Valid second Variable after operator
+						validVariable = true;	//Valid first Variable after operator
 						break;
 					}
 				}
@@ -594,135 +533,177 @@ int ReadInputFile::handleOperations(ifstream &file){
 			{
 				for (unsigned int i = 0; i < outputList.size(); ++i)
 				{
-					if (outputList[i].getName() == token2)
+					if (outputList[i].getName() == token)
 					{
-						validVariable = true;	//Valid second Variable after operator
+						validVariable = true;	//Valid first Variable after operator
 						break;
 					}
 				}
 			}
 			if (!validVariable)
 			{
-				//cout << "Invalid variable: " << token2 << "\n";	//ERROR
-				return -1;											//ERROR
+				//cout << "Could not identity input/wire variable: " << token << " \n";	
+				return -1;																//ERROR
 			}
-		}
-
-		//datawidth = outputVariable->getWidth();		// Possibly don't care about datawidth here anymore
 
 			//identify operator
-		if (token.empty())	//REG
-		{
-
-			return 1;			//Valid output
-		}
-		if (validVariable)	//Means there was a second variable, indicating an operation other than x = y
-		{
-			if (token == "+")		//ADD
+			validVariable = false;
+			if (inputLineStream.eof())
 			{
-				//If token2 is empty, then no variable on other side of operator == error
+				token = "";
 			}
-			else if (token == "-")		//SUB
-			{
-
-			}
-			else if (token == "*")		//MUL
-			{
-
-			}
-			else if (token == "<<")		//SHL
-			{
-
-			}
-			else if (token == ">>")		//SHR
-			{
-
-			}
-			else if (token == "?")		//MUX
+			else
 			{
 				inputLineStream >> token;
-				if (token == ":")	//Mux operation continues
-				{
-					validVariable = false;
-					inputLineStream >> token;
-
-					if (token.length() != 0)
-					{
-						for (unsigned int i = 0; i < registerList.size(); ++i)
-						{
-							if (registerList[i].getName() == token)
-							{
-								validVariable = true;	//Valid third variable after = operator (already verified 2nd before checking operation type
-								break;
-							}
-						}
-					}
-					if (!validVariable)
-					{
-						for (unsigned int i = 0; i < inputList.size(); ++i)
-						{
-							if (inputList[i].getName() == token)
-							{
-								validVariable = true;	//Valid third variable after = operator
-								break;
-							}
-						}
-					}
-					if (!validVariable)
-					{
-						for (unsigned int i = 0; i < outputList.size(); ++i)
-						{
-							if (outputList[i].getName() == token)
-							{
-								validVariable = true;	//Valid third variable after = operator
-								break;
-							}
-						}
-					}
-					if (!validVariable)
-					{
-						//cout << "Invalid variable: " << token << "\n";		//ERROR
-						return -1;												//ERROR missing third variable for mux comparison
-					}
-				}
-				else
-				{
-					//cout << "Invalid operator: " << token << "\n";		//ERROR
-					return -1;												//ERROR
-				}
-
 			}
-			else		//must be comparator or invalid operator
+			if (inputLineStream.eof())
 			{
-				//determine output to wire
-				if (token == ">")
-				{
-
-				}
-				else if (token == "==")
-				{
-
-				}
-				else if (token == "<")
-				{
-
-				}
-				else
-				{
-					//cout << "Invalid operator: " << token << "\n";	//ERROR
-					return -1;												//ERROR
-				}
-
-				//cout << translatedLine << "\n";
-				return 1;							//valid output
+				token2 = "";
 			}
-		}
-		else
-		{
-			//cout << "Incomplete operation \n";			//ERROR
-			return -1;												//ERROR
-		}
-	}
+			else
+			{
+				inputLineStream >> token2;
+			}
+
+			//verify second variable
+			if (token2.length() != 0)
+			{
+				for (unsigned int i = 0; i < registerList.size(); ++i)
+				{
+					if (registerList[i].getName() == token2)
+					{
+						validVariable = true;	//Valid second Variable after operator
+						break;
+					}
+				}
+
+				if (!validVariable)
+				{
+					for (unsigned int i = 0; i < inputList.size(); ++i)
+					{
+						if (inputList[i].getName() == token2)
+						{
+							validVariable = true;	//Valid second Variable after operator
+							break;
+						}
+					}
+				}
+				if (!validVariable)
+				{
+					for (unsigned int i = 0; i < outputList.size(); ++i)
+					{
+						if (outputList[i].getName() == token2)
+						{
+							validVariable = true;	//Valid second Variable after operator
+							break;
+						}
+					}
+				}
+				if (!validVariable)
+				{
+					//cout << "Invalid variable: " << token2 << "\n";	//ERROR
+					return -1;											//ERROR
+				}
+			}
+				//identify operator
+			if (token.empty())	//REG
+			{
+
+				doneWithLine = true;			//Valid output
+			}
+			if (validVariable && !doneWithLine)	//Means there was a second variable, indicating an operation other than x = y
+			{
+				if (token == "+" || token == "-" || token == "*" || token == "<<" || token == ">>")		//ADD, SUB, MUL, SHL, SHR
+				{
+					
+					doneWithLine = true;
+				}
+				else if (token == "?")		//MUX
+				{
+					inputLineStream >> token;
+					if (token == ":")	//Mux operation continues
+					{
+						validVariable = false;
+						inputLineStream >> token;
+
+						if (token.length() != 0)
+						{
+							for (unsigned int i = 0; i < registerList.size(); ++i)
+							{
+								if (registerList[i].getName() == token)
+								{
+									validVariable = true;	//Valid third variable after = operator (already verified 2nd before checking operation type
+									break;
+								}
+							}
+						}
+						if (!validVariable)
+						{
+							for (unsigned int i = 0; i < inputList.size(); ++i)
+							{
+								if (inputList[i].getName() == token)
+								{
+									validVariable = true;	//Valid third variable after = operator
+									break;
+								}
+							}
+						}
+						if (!validVariable)
+						{
+							for (unsigned int i = 0; i < outputList.size(); ++i)
+							{
+								if (outputList[i].getName() == token)
+								{
+									validVariable = true;	//Valid third variable after = operator
+									break;
+								}
+							}
+						}
+						if (!validVariable)
+						{
+							//cout << "Invalid variable: " << token << "\n";		//ERROR
+							return -1;												//ERROR missing third variable for mux comparison
+						}
+					}
+					else
+					{
+						//cout << "Invalid operator: " << token << "\n";		//ERROR
+						return -1;												//ERROR
+					}
+
+				}
+				else		//must be comparator or invalid operator
+				{
+					//determine output to wire
+					if (token == ">")
+					{
+
+					}
+					else if (token == "==")
+					{
+
+					}
+					else if (token == "<")
+					{
+
+					}
+					else
+					{
+						//cout << "Invalid operator: " << token << "\n";	//ERROR
+						return -1;												//ERROR
+					}
+
+					//cout << translatedLine << "\n";
+					return 1;							//valid output
+				}
+			}
+			else if (!doneWithLine)
+			{
+				//cout << "Incomplete operation \n";			//ERROR
+				return -1;												//ERROR
+			}
+		} 
+	}	//End of File line iteration
 	
 
 	return 1;

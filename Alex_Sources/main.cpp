@@ -9,6 +9,7 @@
 #include "variable.h"
 #include "translate.h"
 #include "Graph.h"
+#include "ReadInputFile.h"
 
 using namespace std;
 
@@ -42,7 +43,10 @@ int main(int argc, char* argv[]) {
 	translate mainThread;
 	ifstream inputFile;
 	ofstream outputFile;
-
+	Graph mainGraph;
+	ReadInputFile fileInterpreter;
+	
+	
 
 	inputFile.open(argv[1]);
 	if (inputFile.is_open()) {
@@ -61,21 +65,13 @@ int main(int argc, char* argv[]) {
 		inputFile.close();
 	}
 
+	fileInterpreter.handleOperations(inputFile, &mainGraph);
+
 	outputFileStrings.push_back("\n\n");
 	printParameters();
 
 	inputFile.open(argv[1]);
-	if (inputFile.is_open()) {
-			int num = 0;
-				for (inputFileLine; getline(inputFile, inputFileLine); ) {
-					//outputFileStrings.push_back(mainThread.handleOperations(num, inputFileLine, outputVariables, inputVariables, wireVariables));
-						num += 1;
-				}
-			inputFile.close();
-	}
-	else {	
-		cout << "Could not open input file: " << argv[1] << "." << endl;
-	}
+	
 
 	/***********************PRINT TO OUTPUT**********************************************/
 

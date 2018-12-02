@@ -5,6 +5,7 @@
 #include "Variables.h"
 #include "ReadInputFile.h"
 #include "WriteOutputFile.h"
+#include "Graph.h"
 
 #include <fstream>
 #include <iostream>
@@ -62,7 +63,7 @@ int main(int argc, char* argv[]) {
 		cout << "Fetching operations" << endl;
 		// read.fetchOperations(inputFilename, op);
 		cout << "Fetching operations completed" << endl;					// DEBUGGING (Remove this)
-		read.handleOperations(inputFilename);
+		read.handleOperations(inputFilename, &graph);
 
 		// fetching statements from input file
 		//cout << "Fetching statements" << endl;

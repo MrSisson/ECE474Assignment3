@@ -4,6 +4,7 @@
 
 #include "Variables.h"
 #include "Operations.h"
+#include "Graph.h"
 
 class ReadInputFile {
 public:
@@ -25,7 +26,7 @@ public:
 	bool checkStatementLine(string line);
     void checkDuplicatedVariables();
 	bool checksIfVariableInstantiated(string line);
-	int handleOperations(ifstream &file);
+	int handleOperations(ifstream &file, Graph* graph);
 };
 
 #endif // !READINPUTFILE_H

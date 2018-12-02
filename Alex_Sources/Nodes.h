@@ -18,6 +18,7 @@ private:
 	vector<Edges> edges;
 	int numCycles;
 	string operation;
+	int alapTime;
 
 public:
 	// constructor

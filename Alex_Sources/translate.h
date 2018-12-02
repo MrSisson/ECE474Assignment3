@@ -22,7 +22,7 @@ public:
 	bool readInputFile(ifstream &input, ofstream &output);	//reads the input file
 	void checkInitializationVars(string inputLine);
 	bool variableExists(string inputLine);
-	int handleOperations(int num, string inputLine, vector<variable> outputs, vector<variable> inputs, vector<variable> wires); //also valids line
+	int handleOperations(string inputLine, vector<variable> outputs, vector<variable> inputs, vector<variable> wires); //also valids line
 
 };
 

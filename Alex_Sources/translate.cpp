@@ -220,7 +220,7 @@ bool translate::variableExists(string inputLine) {
 }
 
 
-int translate::handleOperations(int num, string inputLine, vector<variable> outputs, vector<variable> inputs, vector<variable> registers)
+int translate::handleOperations(string inputLine, vector<variable> outputs, vector<variable> inputs, vector<variable> registers)
 {
 	string token, token2;
 	vector<string> inputsAndWires;
