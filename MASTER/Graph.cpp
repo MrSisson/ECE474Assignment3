@@ -1,6 +1,11 @@
 #include "Graph.h"
+<<<<<<< HEAD:Alex_Sources/Graph.cpp
   
 using namespace std; 
+=======
+
+using namespace std;
+>>>>>>> e5b349f0ccb7050e3c7a7269de31a802433ce09d:MASTER/Graph.cpp
 
 // constructors
 Graph::Graph() {} // default constructor
@@ -24,6 +29,21 @@ void Graph::setWeight(int newWeight) {
 	this->weight = newWeight;
 }
 
+void Graph::setUnscheduledList(int num)
+{
+	this->unscheduledList.push_back(num);
+}
+
+void Graph::setAlapSchedule(int num)
+{
+	this->alapSchedule.push_back(num);
+}
+
+void Graph::setListRSchedule(int num)
+{
+	this->listRSchedule.push_back(num);
+}
+
 // getters
 vector<Nodes> Graph::getNodes() {
 	return this->nodes;
@@ -37,7 +57,34 @@ int Graph::getWeight() {
 	return this->weight;
 }
 
+vector<int> Graph::getUnscheduleList()
+{
+	return this->unscheduledList;
+}
+
+vector<int> Graph::getAlapSchedule()
+{
+	return this->alapSchedule;
+}
+
+vector<int> Graph::getListRSchedule()
+{
+	return this->listRSchedule;
+}
+
 //Methods
+
+void Graph::createUnscheduledList()
+{
+}
+
+void Graph::createALAPSchedule()
+{
+}
+
+void Graph::createListRSchedule()
+{
+}
 
 void Graph::addNode(Nodes newNode) {
 	nodes.push_back(newNode);
@@ -50,14 +97,4 @@ void Graph::addNode(Nodes newNode) {
 //	// Calculate weight by determining type of operation
 //
 //	this->weight = tempWeight;
-//}
-
-//void Graph::setupNodesEdges(ReadInputFile &rif)
-//{	
-//	int tempStateNum = 0;
-//	int tempNumCycles = 0;
-//	string tempOperation = "\0";
-//	for (Operations op : rif.operationList) {
-//		this->nodes.
-//	}
 //}

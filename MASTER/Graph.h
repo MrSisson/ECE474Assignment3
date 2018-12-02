@@ -1,12 +1,18 @@
 #pragma once
 #ifndef GRAPH_H
 #define GRAPH_H
+<<<<<<< HEAD:Alex_Sources/Graph.h
   
 class Edges; 
+=======
+
+class Edges;
+>>>>>>> e5b349f0ccb7050e3c7a7269de31a802433ce09d:MASTER/Graph.h
 class Nodes;
 
 #include "Edges.h"
 #include "Nodes.h"
+#include "Operations.h"
 
 #include <string>
 #include <vector>
@@ -19,6 +25,9 @@ private:
 	vector<Nodes> nodes;
 	vector<Edges> edges;
 	int weight;
+	vector<int> unscheduledList;
+	vector<int> alapSchedule;
+	vector<int> listRSchedule;
 
 public:
 	// constructors
@@ -29,20 +38,28 @@ public:
 	void setNodes(Nodes newNodes);
 	void setEdges(Edges newEdges);
 	void setWeight(int newWeight);
+	void setUnscheduledList(int num);
+	void setAlapSchedule(int num);
+	void setListRSchedule(int num);
 
 	//getters
 	vector<Nodes> getNodes();
 	vector<Edges> getEdges();
 	int getWeight();
+	vector<int> getUnscheduleList();
+	vector<int> getAlapSchedule();
+	vector<int> getListRSchedule();
 
 	//methods
-	void addNode(Nodes newNode);
-	
-
 	// void generateALAPTimeTable(); // unsure where to place this yet
 	// void generateList_RSchedule(); // unsure where to plae this yet
 	//void calculateWeights(Operations &op);
-	//void setupNodesEdges(ReadInputFile &rif);
+	void createUnscheduledList();
+	void createALAPSchedule();
+	void createListRSchedule();
+
+	//methods
+	void addNode(Nodes newNode);
 };
 
 #endif // !GRAPH_H

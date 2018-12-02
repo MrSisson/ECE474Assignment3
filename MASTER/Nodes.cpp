@@ -1,7 +1,13 @@
 #include "Nodes.h"
+<<<<<<< HEAD:Alex_Sources/Nodes.cpp
  
 using namespace std; 
  
+=======
+
+using namespace std;
+
+>>>>>>> e5b349f0ccb7050e3c7a7269de31a802433ce09d:MASTER/Nodes.cpp
 // constructors
 Nodes::Nodes() {} // default constructor
 
@@ -15,7 +21,7 @@ Nodes::Nodes(int newStateNum, Edges newEdges, int newNumCycles, string op) {
 // setters
 void Nodes::setStateNum(int newStateNum) {
 	this->stateNum = newStateNum;
-}	
+}
 
 void Nodes::setEdges(Edges newEdges) {
 	this->edges.push_back(newEdges);

@@ -446,7 +446,11 @@ void ReadInputFile::checkDuplicatedVariables(){
 	}
 }
 
-int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
+<<<<<<< HEAD:MASTER/ReadInputFile.cpp
+int ReadInputFile::handleOperations(ifstream &file, Graph* graph){ 
+=======
+int ReadInputFile::handleOperations(ifstream &file, Graph* graph) {
+>>>>>>> e5b349f0ccb7050e3c7a7269de31a802433ce09d:MASTER/ReadInputFile.cpp
 	string inputLine;
 	string token, token2;
 
@@ -605,7 +609,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 					return -1;											//ERROR
 				}
 			}
-				//identify operator
+			//identify operator
 			if (token.empty())	//REG
 			{
 
@@ -615,7 +619,7 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 			{
 				if (token == "+" || token == "-" || token == "*" || token == "<<" || token == ">>")		//ADD, SUB, MUL, SHL, SHR
 				{
-					
+
 					doneWithLine = true;
 				}
 				else if (token == "?")		//MUX
@@ -702,9 +706,9 @@ int ReadInputFile::handleOperations(ifstream &file, Graph* graph){
 				//cout << "Incomplete operation \n";			//ERROR
 				return -1;												//ERROR
 			}
-		} 
+		}
 	}	//End of File line iteration
-	
+
 
 	return 1;
 }
