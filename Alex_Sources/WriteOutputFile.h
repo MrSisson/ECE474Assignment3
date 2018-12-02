@@ -1,7 +1,7 @@
 #pragma once
 #ifndef WRITEOUTPUTFILE_H
 #define WRITEOUTPUTFILE_H
-
+  
 #include "ReadInputFile.h"
 #include "Graph.h" 
 

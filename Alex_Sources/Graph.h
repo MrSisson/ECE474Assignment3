@@ -1,8 +1,8 @@
 #pragma once
 #ifndef GRAPH_H
 #define GRAPH_H
- 
-class Edges;
+  
+class Edges; 
 class Nodes;
 
 #include "Edges.h"

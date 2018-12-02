@@ -1,5 +1,5 @@
 #include "Operations.h"
- 
+   
 using namespace std;
 #include <string>
 #include <fstream>

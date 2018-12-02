@@ -1,10 +1,10 @@
 #pragma once
 #ifndef OPERATIONS_H
 #define OPERATIONS_H
-
-class Variables;
  
-#include "Variable.h"
+class Variables;
+  
+#include "Variables.h"
 
 #include <string>
 #include <vector>

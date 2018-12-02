@@ -1,7 +1,7 @@
 #include "WriteOutputFile.h"
 #include "ReadInputFile.h"
 #include "Variables.h"
-
+ 
 using namespace std; 
 #include <iostream>
 #include <string>
