@@ -16,7 +16,9 @@ using namespace std;
 
 
 //////// F U N C T I O N   M A I N ////////////////////////////
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {	
+	
+
 	
 	// check command line arguments
 	if (argc != 4) {
@@ -26,7 +28,7 @@ int main(int argc, char* argv[]) {
 
 	ifstream inputFilename;
 	ofstream outputFilename;
-
+	
 	// Class objects
 	Variables var;
 	Operations op;
@@ -49,7 +51,7 @@ int main(int argc, char* argv[]) {
 	cout << "argv1:\t" << argv[1] << endl;									// DEBUGGING (Remove this)
 	cout << "argv2:\t" << argv[2] << endl;									// DEBUGGING (Remove this)
 	cout << "argv3:\t" << argv[3] << endl;									// DEBUGGING (Remove this)
-
+	
 	// Get data from input file
 	if (inputFilename.is_open()) {
 		cout << "Opened File for read" << endl;								// DEBUGGING (Remove this)
@@ -78,7 +80,7 @@ int main(int argc, char* argv[]) {
 		cout << "Error: Input file doesn't exists." << endl;
 		return -1;
 	} // Done: Get data from input file
-
+	/*
 //////////// Generate graph ////////////////////////////////////////////////////////////////////////////////////////////////
 	// Testing Graph Class -------------------------------
 	for (int temp = 0; temp < 10; temp++) {
@@ -88,7 +90,7 @@ int main(int argc, char* argv[]) {
 		operation = operation + to_string(tempWeight);
 
 		tempEdge.setCondtionalOperation(cond);
-		tempNode.setEdges(&tempEdge);
+		tempNode.setEdges(tempEdge);
 		tempNode.setOperation(operation);
 
 		tempWeight++;
@@ -98,14 +100,14 @@ int main(int argc, char* argv[]) {
 	}
 	// ----------------------------------------------------
 	// Done: Generate graph
-
+		*/
 //////////// Generate states //////////////////////////////////////////////////////////////////////////////////////////
 
 	// Done: Generate states
 
 //////////// Generate output file ////////////////////////////////////////////////////////////////////////////////////
 	outputFilename.open(argv[3]);
-	if (outputFilename.is_open()) {
+	if (outputFilename.is_open()) {	/*
 		cout << "Opened file for write" << endl;							// DEBUGGING (Remove this)
 		// writing to output file
 		write.createHLSMHeader(outputFilename);
@@ -115,6 +117,13 @@ int main(int argc, char* argv[]) {
 		write.writeOperations(outputFilename, read);
 		cout << "Wrote Operations" << endl;									// DEBUGGING (Remove this)
 		//write.writeGraph(outputFilename, graph);
+		*/
+		read.printVariables();
+		cout << endl;
+		for (Nodes node : graph.getNodes()) {
+			node.printNode();	//PRINT NODES
+		}
+		cout << endl << endl;
 
 		// close output file
 		outputFilename.close();
@@ -126,5 +135,5 @@ int main(int argc, char* argv[]) {
 	}// Done: Generate output file 
 
 	cout << "Reached the end of main" << endl;								// DEBUGGING (Remove this)
-	return 0;
-}// end of main function
+	return 0;					
+}// end of main function 

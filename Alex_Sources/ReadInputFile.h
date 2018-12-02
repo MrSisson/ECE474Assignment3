@@ -20,6 +20,7 @@ public:
 	//methods
 	void fetchVariables(ifstream &file, Variables &var);
 	void fetchOperations(ifstream &file, Operations &op);
+	void printVariables();
 	//void fetchStatements(ifstream &file, Statements &state);
 	void setWidthAndSign(Variables &var, string token);
 	bool checkOperationLine(string line);
